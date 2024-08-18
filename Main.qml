@@ -10,30 +10,41 @@ Window {
     visible: true
     title: qsTr("Builtin Icons available in Material Style")
 
-    Flickable {
+    GridView {
         id: container
         anchors.fill: parent
-        contentWidth: flow.width
-        contentHeight: flow.height
+        model: root.iconNames
+        cellWidth: 50
+        cellHeight: 50
+        delegate: Item {
+            height: GridView.view.cellHeight
+            width: GridView.view.cellWidth
 
-        Flow {
-            id: flow
-            objectName: "Grid"
-            width: container.width
-            Repeater {
-                id: repeater
-                model: root.iconNames
-                Button {
-                    Layout.alignment: Qt.AlignCenter
-                    id: button
-                    text: modelData
-                    icon.name: modelData
-                    display: AbstractButton.TextUnderIcon
+            Button {
+                id: button
+                anchors.horizontalCenter: parent.horizontalCenter
+                text: modelData
+                icon.name: modelData
+                display: AbstractButton.TextUnderIcon
+                Component.onCompleted: {
+                    if (button.implicitWidth > container.cellWidth) {
+                        container.cellWidth = button.implicitWidth
+                    }
+                    if (button.implicitHeight > container.cellHeight) {
+                        container.cellHeight = button.implicitHeight
+                    }
                 }
             }
         }
     }
+
     // At end of file, as it is very long
+    // TODO sync fully with
+    // https://specifications.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html
+    // TIP QT_LOGGING_RULES=qt.gui.icon.loader.debug=true
+    // TIP QT_LOGGING_RULES=*.debug=true; qt.quick.pointer.localization=false;qt.quick.hover=false
+
+
     property list<string> iconNames: [
         // copied from QIcon cpp
         // static constexpr auto themeIconMapping = qOffsetStringArray(
@@ -59,6 +70,7 @@ Window {
             "edit-cut",
             "edit-delete",
             "edit-find",
+            "edit-find-replace",  // added as missing in QIcon
             "edit-paste",
             "edit-redo",
             "edit-select-all",
@@ -76,26 +88,36 @@ Window {
             "format-text-italic",
             "format-text-underline",
             "format-text-strikethrough",
+            "go-bottom",  // added as missing in QIcon
             "go-down",
+            "go-first",  // added as missing in QIcon
             "go-home",
+            "go-jump",  // added as missing in QIcon
+            "go-last",  // added as missing in QIcon
             "go-next",
             "go-previous",
+            "go-top",  // added as missing in QIcon
             "go-up",
             "help-about",
+            "help-contents",  // added as missing in QIcon
             "help-faq",
             "insert-image",
             "insert-link",
+            "insert-object",  // added as missing in QIcon
             "insert-text",
             "list-add",
             "list-remove",
             "mail-forward",
             "mail-mark-important",
+            "mail-mark-junk",  // added as missing in QIcon
+            "mail-mark-notjunk",  // added as missing in QIcon
             "mail-mark-read",
             "mail-mark-unread",
             "mail-message-new",
             "mail-reply-all",
             "mail-reply-sender",
             "mail-send",
+            "mail-send-receive",  // added as missing in QIcon
             "media-eject",
             "media-playback-pause",
             "media-playback-start",
@@ -105,11 +127,14 @@ Window {
             "media-seek-forward",
             "media-skip-backward",
             "media-skip-forward",
+            "object-flip-horizontal",  // added as missing in QIcon
+            "object-flip-vertical",  // added as missing in QIcon
             "object-rotate-left",
             "object-rotate-right",
             "process-stop",
             "system-lock-screen",
             "system-log-out",
+            "system-run",  // added as missing in QIcon
             "system-search",
             "system-reboot",
             "system-shutdown",
@@ -117,11 +142,16 @@ Window {
             "view-fullscreen",
             "view-refresh",
             "view-restore",
+            "view-sort-ascending",  // added as missing in QIcon
+            "view-sort-descending",  // added as missing in QIcon
             "window-close",
             "window-new",
             "zoom-fit-best",
             "zoom-in",
+            "zoom-original",  // added as missing in QIcon
             "zoom-out",
+
+            "process-working",   // added as missing in QIcon
 
             "audio-card",
             "audio-input-microphone",
@@ -132,16 +162,20 @@ Window {
             "computer",
             "drive-harddisk",
             "drive-optical",
+            "drive-removable-media", // added
             "input-gaming",
             "input-keyboard",
             "input-mouse",
             "input-tablet",
             "media-flash",
+            "media-floppy",
             "media-optical",
             "media-tape",
+            "modem",
             "multimedia-player",
             "network-wired",
             "network-wireless",
+            "pda",
             "phone",
             "printer",
             "scanner",
@@ -188,6 +222,68 @@ Window {
             "weather-fog",
             "weather-showers",
             "weather-snow",
-            "weather-storm"
+            "weather-storm",
+
+            // found in qwindows.dll...
+            "accessories-calculator",
+            "accessories-character-map",
+            "accessories-dictionary",
+            "accessories-text-editor",   // From
+            "help-browser",
+            "multimedia-volume-control",
+            "preferences-desktop",
+            "preferences-desktop-accessibility",
+            "preferences-desktop-font",
+            "preferences-desktop-keyboard",
+            "preferences-desktop-locale",
+            "preferences-desktop-screensaver",
+            "preferences-desktop-theme",
+            "preferences-desktop-wallpaper",
+            "preferences-desktop-peripherals",
+            "preferences-desktop-personal",
+            "preferences-other",
+            "preferences-system",
+            "preferences-system-network",
+            "system-file-manager",
+            "system-software-install",
+            "system-software-update",
+            "utilities-system-monitor",
+            "utilities-terminal",
+            "applications-accessories",
+            "applications-development",
+            "applications-engineering",
+            "applications-games",
+            "applications-graphics",
+            "applications-internet",
+            "applications-multimedia",
+            "applications-office",
+            "applications-other",
+            "applications-science",
+            "applications-system",
+            "applications-utilities",
+            "system-help",
+            "emblem-default",
+            "emblem-documents",
+            "emblem-downloads",
+            "emblem-favorite",
+            "emblem-important",
+            "emblem-mail",
+            "emblem-photos",
+            "emblem-shared",
+            "emblem-symbolic-link",
+            "emblem-synchronized",
+            "emblem-system",
+            "emblem-unreadable",
+            "folder",
+            "folder-remote",
+            "start-here",
+            "user-bookmarks",
+            "user-desktop",
+            "user-home",
+            "user-trash",
+            "dialog-error",
+            "weather-overcast",
+            "network-server",
+            "network-workgroup"
          ]
 }
